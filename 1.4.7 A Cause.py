@@ -10,7 +10,7 @@ class ImageRetriever():
     def retrieve__all_image_names(self):
         absolute_file_list = []
         entry_list = []
-        directory_list = os.listdir(directory)
+        directory_list = os.listdir(self.directory)
 
         for entry in directory_list:
             absolute_filename = os.path.join(directory, entry)
@@ -40,7 +40,7 @@ class ImageRetriever():
         return image_list
 
     def retrieve_image(self, name):
-        absolute_filenames, entry_list = retrieve__all_image_names()
+        absolute_filenames, entry_list = retrieve_all_image_names()
 
         for entry, absolute_filename in entry_list, absolute_filenames:
             if entry == name:
@@ -52,3 +52,5 @@ class FilterApplier():
         self.image = image
 
     def blur_image(self):
+
+    pass
