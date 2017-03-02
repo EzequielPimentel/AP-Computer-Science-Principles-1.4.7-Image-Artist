@@ -4,29 +4,51 @@ import PIL.ImageDraw
 import PIL.ImageFilter
 
 class ImageRetriever():
-
     def __init__(self, directory = os.getcwd()):
         self.directory = directory
 
-    def retrieve_all_images():
+    def retrieve__all_image_names(self):
+        absolute_file_list = []
+        entry_list = []
+        directory_list = os.listdir(directory)
+
+        for entry in directory_list:
+            absolute_filename = os.path.join(directory, entry)
+            try:
+                image = PIL.Image.open(absolute_filename)
+                absolute_file_list += [absolute_filename]
+                entry_list += [entry]
+            except IOError:
+                pass # ignore the error if it's not an image
+
+        return absolute_file_list, entry_list
+
+    def retrieve_all_images(self):
         image_list = []
-        file_list = []
 
         directory_list = os.listdir(directory)
 
         for entry in directory_list:
             absolute_filename = os.path.join(directory, entry)
             try:
-                image = PIL.image.open(absolute_filename)
-                file_list += [entry]
+                image = PIL.Image.open(absolute_filename)
                 image_list += [image]
 
             except IOError:
                 pass # ignore the error if it's not an image
 
-        return image_list, file_list
+        return image_list
+
+    def retrieve_image(self, name):
+        absolute_filenames, entry_list = retrieve__all_image_names()
+
+        for entry, absolute_filename in entry_list, absolute_filenames:
+            if entry == name:
+                return PIL.Image.open(absolute_filename)
 
 class FilterApplier():
 
     def __init__(self, image):
         self.image = image
+
+    def blur_image(self):
