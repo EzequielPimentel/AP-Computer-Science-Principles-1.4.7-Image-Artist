@@ -3,7 +3,7 @@ import os.path
 import PIL.ImageDraw
 import PIL.ImageFilter
 
-class ImageRetriever():
+class ImageFileHandler():
     def __init__(self, directory = os.getcwd()):
         self.directory = directory
 
@@ -45,3 +45,14 @@ class ImageRetriever():
         for entry, absolute_filename in entry_list, absolute_filenames:
             if entry == name:
                 return PIL.Image.open(absolute_filename)
+
+    def save_images(self, images, name):
+        modified_folder = os.path.join(directory, 'modified_images')
+        for file in os.listdir(modified_folder):
+            file_path = os.path.join(modified_folder, file)
+            os.unlink(file_path)
+
+        stepper = 0
+        for image in images:
+            image.save("image" + str(stepper))
+            stepper += 1
