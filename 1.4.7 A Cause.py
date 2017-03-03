@@ -45,12 +45,3 @@ class ImageRetriever():
         for entry, absolute_filename in entry_list, absolute_filenames:
             if entry == name:
                 return PIL.Image.open(absolute_filename)
-
-class FilterApplier():
-
-    def __init__(self, image):
-        self.image = image
-
-    def blur_image(self):
-
-    pass
