@@ -1,4 +1,4 @@
- import PIL
+import PIL
 import os.path
 import PIL.ImageDraw
 import PIL.ImageFilter
@@ -13,9 +13,9 @@ class ImageFileHandler():
         directory_list = os.listdir(self.directory)
 
         for entry in directory_list:
-            absolute_filename = os.path.join(self.directory, entry)
+            absolute_filename = os.path.join(directory, entry)
             try:
-                PIL.Image.open(absolute_filename)
+                image = PIL.Image.open(absolute_filename)
                 absolute_file_list += [absolute_filename]
                 entry_list += [entry]
             except IOError:
@@ -26,10 +26,10 @@ class ImageFileHandler():
     def retrieve_all_images(self):
         image_list = []
 
-        directory_list = os.listdir(self.directory)
+        directory_list = os.listdir(directory)
 
         for entry in directory_list:
-            absolute_filename = os.path.join(self.directory, entry)
+            absolute_filename = os.path.join(directory, entry)
             try:
                 image = PIL.Image.open(absolute_filename)
                 image_list += [image]
@@ -40,13 +40,13 @@ class ImageFileHandler():
         return image_list
 
     def retrieve_image(self, name):
-        absolute_filenames, entry_list = self.retrieve_all_image_names()
+        absolute_filenames, entry_list = retrieve_all_image_names()
 
         for entry, absolute_filename in entry_list, absolute_filenames:
             if entry == name:
                 return PIL.Image.open(absolute_filename)
-             
-   def save_images(self, images, name):
+
+    def save_images(self, images, name):
         modified_folder = os.path.join(directory, 'modified_images')
         for file in os.listdir(modified_folder):
             file_path = os.path.join(modified_folder, file)
@@ -56,13 +56,3 @@ class ImageFileHandler():
         for image in images:
             image.save("image" + str(stepper))
             stepper += 1
-            
-class FilterApplier():
-
-    def __init__(self, images):
-        self.images = images
-
-    def blur_images(self):
-        for image in self.images:
-            blurred_image = image.filter(PIL.ImageFilter.BLUR)
-            return blurred_image
