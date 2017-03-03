@@ -13,9 +13,9 @@ class ImageRetriever():
         directory_list = os.listdir(self.directory)
 
         for entry in directory_list:
-            absolute_filename = os.path.join(directory, entry)
+            absolute_filename = os.path.join(self.directory, entry)
             try:
-                image = PIL.Image.open(absolute_filename)
+                PIL.Image.open(absolute_filename)
                 absolute_file_list += [absolute_filename]
                 entry_list += [entry]
             except IOError:
@@ -26,10 +26,10 @@ class ImageRetriever():
     def retrieve_all_images(self):
         image_list = []
 
-        directory_list = os.listdir(directory)
+        directory_list = os.listdir(self.directory)
 
         for entry in directory_list:
-            absolute_filename = os.path.join(directory, entry)
+            absolute_filename = os.path.join(self.directory, entry)
             try:
                 image = PIL.Image.open(absolute_filename)
                 image_list += [image]
@@ -40,8 +40,18 @@ class ImageRetriever():
         return image_list
 
     def retrieve_image(self, name):
-        absolute_filenames, entry_list = retrieve_all_image_names()
+        absolute_filenames, entry_list = self.retrieve_all_image_names()
 
         for entry, absolute_filename in entry_list, absolute_filenames:
             if entry == name:
                 return PIL.Image.open(absolute_filename)
+
+class FilterApplier():
+
+    def __init__(self, images):
+        self.images = images
+
+    def blur_images(self):
+        for image in self.images:
+            blurred_image = image.filter(PIL.ImageFilter.BLUR)
+            return blurred_image
