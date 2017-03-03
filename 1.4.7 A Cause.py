@@ -54,14 +54,19 @@ class PasteImage():
         
  
     
-    def paste_image(self):
+    def paste_logo(self):
+        
         for image in self.images:
             width, height = image.size
             image.paste(self.pasted_logo, (width-30,height-30))
+            
  
 image_retriever = ImageRetriever()         
 images = image_retriever.retrieve_all_images()
 pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
+paste_image = PasteImage(images,pasted_logo)
 
-print(pasted_logo)
+
+
+
 
