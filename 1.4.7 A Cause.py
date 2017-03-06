@@ -79,10 +79,6 @@ class PasteImage():
     def paste_logo_on_images(self):
         images = []
         for image in self.images:
-<<<<<<< HEAD
-            blurred_image = image.filter(PIL.ImageFilter.BLUR)
-            return blurred_image
-=======
             pasted_image = self.paste_logo(image)
             images += [pasted_image]
 
