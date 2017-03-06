@@ -1,4 +1,4 @@
- import PIL
+import PIL
 import os.path
 import PIL.ImageDraw
 import PIL.ImageFilter
@@ -7,10 +7,10 @@ class ImageFileHandler():
     def __init__(self, directory = os.getcwd()):
         self.directory = directory
 
-    def retrieve__all_image_names(self):
+    def retrieve_all_image_names(self):
         absolute_file_list = []
         entry_list = []
-        directory_list = os.listdir(self.directory)
+        directory_list = os.listdir(os.getcwd())
 
         for entry in directory_list:
             absolute_filename = os.path.join(directory, entry)
@@ -42,27 +42,66 @@ class ImageFileHandler():
     def retrieve_image(self, name):
         absolute_filenames, entry_list = retrieve_all_image_names()
 
-        for entry, absolute_filename in entry_list, absolute_filenames:
+        for (entry, absolute_filename) in zip(entry_list, absolute_filenames):
             if entry == name:
                 return PIL.Image.open(absolute_filename)
 
+<<<<<<< HEAD
    def save_images(self, images, name):
         modified_folder = os.path.join(directory, 'modified_images')
+=======
+    def save_images(self, images, base_name):
+        modified_folder = os.path.join(self.directory, 'modified_images')
+        if not os.path.isdir(modified_folder):
+            os.makedirs(modified_folder)
+
+>>>>>>> refs/remotes/origin/master
         for file in os.listdir(modified_folder):
             file_path = os.path.join(modified_folder, file)
             os.unlink(file_path)
 
         stepper = 0
         for image in images:
-            image.save("image" + str(stepper))
+            im_format = image.format
+            file_name = os.path.join(modified_folder, base_name + str(stepper) + '.' + im_format)
+            print(file_name)
+            image.save(file_name)
             stepper += 1
+<<<<<<< HEAD
 
 class FilterApplier():
+=======
+>>>>>>> refs/remotes/origin/master
 
-    def __init__(self, images):
+class PasteImage():
+
+    def __init__(self, images, pasted_logo):
         self.images = images
+        self.pasted_logo = pasted_logo
 
-    def blur_images(self):
+    def paste_logo(self, image):
+        width, height = image.size
+        pasted_logo = self.pasted_logo.resize((20, 20))
+        image.paste(pasted_logo, (0, 0))
+        return image
+
+    def paste_logo_on_images(self):
+        images = []
         for image in self.images:
+<<<<<<< HEAD
             blurred_image = image.filter(PIL.ImageFilter.BLUR)
             return blurred_image
+=======
+            pasted_image = self.paste_logo(image)
+            images += [pasted_image]
+
+        return images
+
+def paste_image_test():
+    image_retriever = ImageFileHandler()
+    images = image_retriever.retrieve_all_images()
+    pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
+    paste_image = PasteImage(images, pasted_logo)
+    pasted_images = paste_image.paste_logo_on_images()
+    image_retriever.save_images(pasted_images, "paste_image_test")
+>>>>>>> refs/remotes/origin/master
