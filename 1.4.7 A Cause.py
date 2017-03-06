@@ -47,26 +47,24 @@ class ImageRetriever():
                 return PIL.Image.open(absolute_filename)
 
 class PasteImage():
-    
+
     def __init__(self, images, pasted_logo):
         self.images = images
         self.pasted_logo = pasted_logo
-        
- 
-    
-    def paste_logo(self):
-        
+
+
+
+    def paste_logo(self, image):
+        width, height = image.size
+        image.paste(self.pasted_logo, (width-30, height-30))
+
+    def paste_logo_on_images(self):
         for image in self.images:
-            width, height = image.size
-            image.paste(self.pasted_logo, (width-30,height-30))
-            
- 
-image_retriever = ImageRetriever()         
+            paste_logo(image)
+
+
+image_retriever = ImageRetriever()
 images = image_retriever.retrieve_all_images()
 pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
-paste_image = PasteImage(images,pasted_logo)
-
-
-
-
-
+paste_image = PasteImage(images, pasted_logo)
+paste_image.paste_logo_on_images()
