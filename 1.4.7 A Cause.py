@@ -71,15 +71,18 @@ class PasteImage():
 
     def paste_logo(self, image):
         width, height = image.size
-        pasted_logo = self.pasted_logo.resize((20, 20))
-        image.paste(pasted_logo, (0, 0))
+        logo_resize_size = width/10
+        pasted_logo = self.pasted_logo.resize((logo_resize_size, logo_resize_size))
+        image.paste(pasted_logo, ((width-logo_resize_size)-30, (height-logo_resize_size)-30), pasted_logo)
         return image
 
     def paste_logo_on_images(self):
         images = []
+        
         for image in self.images:
-            pasted_image = self.paste_logo(image)
-            images += [pasted_image]
+            if image != self.pasted_logo:
+                pasted_image = self.paste_logo(image)
+                images += [pasted_image]
 
         return images
 
