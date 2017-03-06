@@ -45,17 +45,11 @@ class ImageFileHandler():
         for (entry, absolute_filename) in zip(entry_list, absolute_filenames):
             if entry == name:
                 return PIL.Image.open(absolute_filename)
-
-<<<<<<< HEAD
-   def save_images(self, images, name):
-        modified_folder = os.path.join(directory, 'modified_images')
-=======
     def save_images(self, images, base_name):
         modified_folder = os.path.join(self.directory, 'modified_images')
         if not os.path.isdir(modified_folder):
             os.makedirs(modified_folder)
 
->>>>>>> refs/remotes/origin/master
         for file in os.listdir(modified_folder):
             file_path = os.path.join(modified_folder, file)
             os.unlink(file_path)
@@ -67,11 +61,8 @@ class ImageFileHandler():
             print(file_name)
             image.save(file_name)
             stepper += 1
-<<<<<<< HEAD
 
 class FilterApplier():
-=======
->>>>>>> refs/remotes/origin/master
 
 class PasteImage():
 
