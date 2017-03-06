@@ -91,4 +91,3 @@ def paste_image_test():
     paste_image = PasteImage(images, pasted_logo)
     pasted_images = paste_image.paste_logo_on_images()
     image_retriever.save_images(pasted_images, "paste_image_test")
->>>>>>> refs/remotes/origin/master
