@@ -2,6 +2,7 @@ import PIL
 import os.path
 import PIL.ImageDraw
 import PIL.ImageFilter
+import PIL.ImageEnhance
 
 class ImageFileHandler():
     def __init__(self, directory = os.getcwd()):
@@ -13,9 +14,9 @@ class ImageFileHandler():
         directory_list = os.listdir(os.getcwd())
 
         for entry in directory_list:
-            absolute_filename = os.path.join(directory, entry)
+            absolute_filename = os.path.join(self.directory, entry)
             try:
-                image = PIL.Image.open(absolute_filename)
+                PIL.Image.open(absolute_filename)
                 absolute_file_list += [absolute_filename]
                 entry_list += [entry]
             except IOError:
@@ -40,7 +41,7 @@ class ImageFileHandler():
         return image_list
 
     def retrieve_image(self, name):
-        absolute_filenames, entry_list = retrieve_all_image_names()
+        absolute_filenames, entry_list = self.retrieve_all_image_names()
 
         for (entry, absolute_filename) in zip(entry_list, absolute_filenames):
             if entry == name:
@@ -56,10 +57,17 @@ class ImageFileHandler():
 
         stepper = 0
         for image in images:
+            print(type(image))
+            print(type(image.format))
             im_format = image.format
+            if im_format is None:
+                im_format = 'JPG'
+
             file_name = os.path.join(modified_folder, base_name + str(stepper) + '.' + im_format)
-            print(file_name)
-            image.save(file_name)
+            try:
+                image.save(file_name)
+            except AttributeError:
+                pass
             stepper += 1
 
 class FilterApplier():
@@ -74,13 +82,13 @@ class FilterApplier():
 
     def contrast(self, image):
         contraster = PIL.ImageEnhance.Contrast(image)
-        contraster.enhance(1.5)
-        return image
+        contrasted_image = contraster.enhance(1.5)
+        return contrasted_image
 
     def decrease_brightness(self, image):
         brightner = PIL.ImageEnhance.Brightness(image)
-        brightner.enhance(0.5)
-        return image
+        brightened_image = brightner.enhance(0.6)
+        return brightened_image
 
     def chain_filters(self, original_image):
         blurred_image = self.blur(original_image)
@@ -117,19 +125,21 @@ class PasteImage():
         return images
 
 def fetch_images():
-    image_retriever = ImageFileHandler()
-    images = image_retriever.retrieve_all_images()
+    image_handler = ImageFileHandler()
+    images = image_handler.retrieve_all_images()
     return images
 
 def paste_image_test():
+    image_handler = ImageFileHandler()
     images = fetch_images()
-    pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
+    pasted_logo = image_handler.retrieve_image("Save tree logo.png")
     paste_image = PasteImage(images, pasted_logo)
     pasted_images = paste_image.paste_logo_on_images()
-    image_retriever.save_images(pasted_images, "paste_image_test")
+    image_handler.save_images(pasted_images, "paste_image_test")
 
 def filter_test():
+    image_handler = ImageFileHandler()
     images = fetch_images()
     filter_applier = FilterApplier(images)
     filtered_images = filter_applier.chain_filters_on_all_images()
-    image_retriever.save_images(filtered_images, "filter_image_test")
+    image_handler.save_images(filtered_images, "filter_image_test")
