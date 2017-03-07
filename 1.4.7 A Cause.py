@@ -2,6 +2,7 @@ import PIL
 import os.path
 import PIL.ImageDraw
 import PIL.ImageFilter
+import PIL.ImageEnhance
 
 class ImageFileHandler():
     def __init__(self, directory = os.getcwd()):
@@ -59,7 +60,6 @@ class ImageFileHandler():
         for (entry, absolute_filename) in zip(entry_list, absolute_filenames):
             if entry == name:
                 return PIL.Image.open(absolute_filename)
-
     def save_images(self, images, base_name):
         """
         Saves a list of images in a folder, "modified_images". Images is a list
@@ -75,11 +75,52 @@ class ImageFileHandler():
 
         stepper = 0
         for image in images:
+            print(type(image))
+            print(type(image.format))
             im_format = image.format
+            if im_format is None:
+                im_format = 'JPG'
+
             file_name = os.path.join(modified_folder, base_name + str(stepper) + '.' + im_format)
-            print(file_name)
-            image.save(file_name)
+            try:
+                image.save(file_name)
+            except AttributeError:
+                pass
             stepper += 1
+
+class FilterApplier():
+    '''An object that handles the task of adding filters to images.'''
+    def __init__(self, images):
+        '''Specify the images you want to filter.'''
+        self.images = images
+
+    def blur(self, image):
+        blurred_image = image.filter(PIL.ImageFilter.BLUR)
+        return blurred_image
+
+    def contrast(self, image):
+        contraster = PIL.ImageEnhance.Contrast(image)
+        contrasted_image = contraster.enhance(1.5)
+        return contrasted_image
+
+    def decrease_brightness(self, image):
+        brightner = PIL.ImageEnhance.Brightness(image)
+        brightened_image = brightner.enhance(0.6)
+        return brightened_image
+
+    def chain_filters(self, original_image):
+        blurred_image = self.blur(original_image)
+        contrasted_image = self.contrast(blurred_image)
+        reduced_brightness_image = self.decrease_brightness(contrasted_image)
+        return reduced_brightness_image
+
+    def chain_filters_on_all_images(self):
+        filtered_images = []
+        for image in self.images:
+            filtered_image = self.chain_filters(image)
+            filtered_images += [filtered_image]
+
+        return filtered_images
 
 class PasteImage():
 
@@ -116,7 +157,13 @@ class PasteImage():
 
         return images
 
+def fetch_images():
+    image_handler = ImageFileHandler()
+    images = image_handler.retrieve_all_images()
+    return images
+
 def paste_image_test():
+<<<<<<< HEAD
     """
     A test of how you paste a logo onto a list of images. A folder is created in
     the current working directory of the modified images.
@@ -124,6 +171,18 @@ def paste_image_test():
     image_retriever = ImageFileHandler()
     images = image_retriever.retrieve_all_images()
     pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
+=======
+    image_handler = ImageFileHandler()
+    images = fetch_images()
+    pasted_logo = image_handler.retrieve_image("Save tree logo.png")
+>>>>>>> master
     paste_image = PasteImage(images, pasted_logo)
     pasted_images = paste_image.paste_logo_on_images()
-    image_retriever.save_images(pasted_images, "paste_image_test")
+    image_handler.save_images(pasted_images, "paste_image_test")
+
+def filter_test():
+    image_handler = ImageFileHandler()
+    images = fetch_images()
+    filter_applier = FilterApplier(images)
+    filtered_images = filter_applier.chain_filters_on_all_images()
+    image_handler.save_images(filtered_images, "filter_image_test")
