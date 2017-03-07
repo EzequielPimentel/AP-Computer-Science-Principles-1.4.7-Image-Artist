@@ -126,7 +126,7 @@ class PasteImage():
 
     def __init__(self, images, pasted_logo):
         """
-        pasted_logo is the file name of a logo that will be pasted onto other 
+        pasted_logo is the file name of a logo that will be pasted onto other
         images.
         """
         self.images = images
@@ -134,13 +134,12 @@ class PasteImage():
 
     def paste_logo(self, image):
         """
-        Pastes the logo specified onto an image. Returns a single modified image. 
+        Pastes the logo specified onto an image. Returns a single modified image.
         image is a PIL image that will be modified.
         """
         width, height = image.size
-        logo_resize_size = width/10
-        pasted_logo = self.pasted_logo.resize((logo_resize_size, logo_resize_size))
-        image.paste(pasted_logo, ((width-logo_resize_size)-30, (height-logo_resize_size)-30), pasted_logo)
+        pasted_logo = self.pasted_logo.resize((20, 20))
+        image.paste(pasted_logo, (0, 0))
         return image
 
     def paste_logo_on_images(self):
@@ -149,11 +148,9 @@ class PasteImage():
         onto each image. Returns a list of modified images.
         """
         images = []
-        
         for image in self.images:
-            if image != self.pasted_logo:
-                pasted_image = self.paste_logo(image)
-                images += [pasted_image]
+            pasted_image = self.paste_logo(image)
+            images += [pasted_image]
 
         return images
 
@@ -163,19 +160,9 @@ def fetch_images():
     return images
 
 def paste_image_test():
-<<<<<<< HEAD
-    """
-    A test of how you paste a logo onto a list of images. A folder is created in
-    the current working directory of the modified images.
-    """
-    image_retriever = ImageFileHandler()
-    images = image_retriever.retrieve_all_images()
-    pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
-=======
     image_handler = ImageFileHandler()
     images = fetch_images()
     pasted_logo = image_handler.retrieve_image("Save tree logo.png")
->>>>>>> master
     paste_image = PasteImage(images, pasted_logo)
     pasted_images = paste_image.paste_logo_on_images()
     image_handler.save_images(pasted_images, "paste_image_test")
