@@ -26,10 +26,10 @@ class ImageFileHandler():
     def retrieve_all_images(self):
         image_list = []
 
-        directory_list = os.listdir(directory)
+        directory_list = os.listdir(self.directory)
 
         for entry in directory_list:
-            absolute_filename = os.path.join(directory, entry)
+            absolute_filename = os.path.join(self.directory, entry)
             try:
                 image = PIL.Image.open(absolute_filename)
                 image_list += [image]
@@ -63,6 +63,38 @@ class ImageFileHandler():
             stepper += 1
 
 class FilterApplier():
+    '''An object that handles the task of adding filters to images.'''
+    def __init__(self, images):
+        '''Specify the images you want to filter.'''
+        self.images = images
+
+    def blur(self, image):
+        blurred_image = image.filter(PIL.ImageFilter.BLUR)
+        return blurred_image
+
+    def contrast(self, image):
+        contraster = PIL.ImageEnhance.Contrast(image)
+        contraster.enhance(1.5)
+        return image
+
+    def decrease_brightness(self, image):
+        brightner = PIL.ImageEnhance.Brightness(image)
+        brightner.enhance(0.5)
+        return image
+
+    def chain_filters(self, original_image):
+        blurred_image = self.blur(original_image)
+        contrasted_image = self.contrast(blurred_image)
+        reduced_brightness_image = self.decrease_brightness(contrasted_image)
+        return reduced_brightness_image
+
+    def chain_filters_on_all_images(self):
+        filtered_images = []
+        for image in self.images:
+            filtered_image = self.chain_filters(image)
+            filtered_images += [filtered_image]
+
+        return filtered_images
 
 class PasteImage():
 
@@ -84,10 +116,20 @@ class PasteImage():
 
         return images
 
-def paste_image_test():
+def fetch_images():
     image_retriever = ImageFileHandler()
     images = image_retriever.retrieve_all_images()
+    return images
+
+def paste_image_test():
+    images = fetch_images()
     pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
     paste_image = PasteImage(images, pasted_logo)
     pasted_images = paste_image.paste_logo_on_images()
     image_retriever.save_images(pasted_images, "paste_image_test")
+
+def filter_test():
+    images = fetch_images()
+    filter_applier = FilterApplier(images)
+    filtered_images = filter_applier.chain_filters_on_all_images()
+    image_retriever.save_images(filtered_images, "filter_image_test")
