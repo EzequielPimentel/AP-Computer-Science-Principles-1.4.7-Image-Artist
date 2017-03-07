@@ -5,9 +5,16 @@ import PIL.ImageFilter
 
 class ImageFileHandler():
     def __init__(self, directory = os.getcwd()):
+        """
+        Directory is set to the current working directory.
+        """
         self.directory = directory
 
     def retrieve_all_image_names(self):
+        """
+        Returns the file list and a list of file names of all images in the
+        current working directory.
+        """
         absolute_file_list = []
         entry_list = []
         directory_list = os.listdir(os.getcwd())
@@ -24,6 +31,9 @@ class ImageFileHandler():
         return absolute_file_list, entry_list
 
     def retrieve_all_images(self):
+        """
+        Returns a list of PIL images in the current working directory.
+        """
         image_list = []
 
         directory_list = os.listdir(self.directory)
@@ -40,6 +50,10 @@ class ImageFileHandler():
         return image_list
 
     def retrieve_image(self, name):
+        """
+        Returns a single PIL image. Used to retrieve the pasted logo. Name is the
+        file name of the image you want to be retrieved.
+        """
         absolute_filenames, entry_list = self.retrieve_all_image_names()
 
         for (entry, absolute_filename) in zip(entry_list, absolute_filenames):
@@ -47,6 +61,10 @@ class ImageFileHandler():
                 return PIL.Image.open(absolute_filename)
 
     def save_images(self, images, base_name):
+        """
+        Saves a list of images in a folder, "modified_images". Images is a list
+        of images and base_name is a string that the images are saved under.
+        """
         modified_folder = os.path.join(self.directory, 'modified_images')
         if not os.path.isdir(modified_folder):
             os.makedirs(modified_folder)
@@ -66,10 +84,18 @@ class ImageFileHandler():
 class PasteImage():
 
     def __init__(self, images, pasted_logo):
+        """
+        pasted_logo is the file name of a logo that will be pasted onto other 
+        images.
+        """
         self.images = images
         self.pasted_logo = pasted_logo
 
     def paste_logo(self, image):
+        """
+        Pastes the logo specified onto an image. Returns a single modified image. 
+        image is a PIL image that will be modified.
+        """
         width, height = image.size
         logo_resize_size = width/10
         pasted_logo = self.pasted_logo.resize((logo_resize_size, logo_resize_size))
@@ -77,6 +103,10 @@ class PasteImage():
         return image
 
     def paste_logo_on_images(self):
+        """
+        Iterates through a list of images, images, to paste a specified logo
+        onto each image. Returns a list of modified images.
+        """
         images = []
         
         for image in self.images:
@@ -87,6 +117,10 @@ class PasteImage():
         return images
 
 def paste_image_test():
+    """
+    A test of how you paste a logo onto a list of images. A folder is created in
+    the current working directory of the modified images.
+    """
     image_retriever = ImageFileHandler()
     images = image_retriever.retrieve_all_images()
     pasted_logo = image_retriever.retrieve_image("Save tree logo.png")
