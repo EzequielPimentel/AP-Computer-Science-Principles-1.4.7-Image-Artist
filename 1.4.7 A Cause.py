@@ -95,26 +95,41 @@ class FilterApplier():
         self.images = images
 
     def blur(self, image):
+        '''
+        Blur the specified image.
+        '''
         blurred_image = image.filter(PIL.ImageFilter.BLUR)
         return blurred_image
 
-    def contrast(self, image):
+    def contrast(self, image, contrast_factor = 1.5):
+        '''
+        Contrast the image by a specified contrast_factor.
+        '''
         contraster = PIL.ImageEnhance.Contrast(image)
-        contrasted_image = contraster.enhance(1.5)
+        contrasted_image = contraster.enhance(contrast_factor)
         return contrasted_image
 
-    def decrease_brightness(self, image):
+    def decrease_brightness(self, image, enhance_factor = 0.6):
+        '''
+        Decrease the brightness of an image by a specified enhance_factor.
+        '''
         brightner = PIL.ImageEnhance.Brightness(image)
-        brightened_image = brightner.enhance(0.6)
+        brightened_image = brightner.enhance(enhance_factor)
         return brightened_image
 
     def chain_filters(self, original_image):
+        '''
+        Chain the blur, contrast, and decrease brightness filters for an image with all the filters applied.
+        '''
         blurred_image = self.blur(original_image)
         contrasted_image = self.contrast(blurred_image)
         reduced_brightness_image = self.decrease_brightness(contrasted_image)
         return reduced_brightness_image
 
     def chain_filters_on_all_images(self):
+        '''
+        Chain the filters on all of the images that were specified when initializing this class.
+        '''
         filtered_images = []
         for image in self.images:
             filtered_image = self.chain_filters(image)
